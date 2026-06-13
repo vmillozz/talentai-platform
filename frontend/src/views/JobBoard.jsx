@@ -11,7 +11,7 @@ export default function JobBoard() {
 
   // Recupera i lavori dal Job Service
   useEffect(() => {
-    axios.get('http://localhost:5001/api/jobs')
+    axios.get('http://localhost:5003/api/jobs')
       .then(res => setJobs(res.data))
       .catch(err => console.error("Errore caricamento lavori", err));
   }, []);
@@ -28,14 +28,14 @@ export default function JobBoard() {
       const formData = new FormData();
       formData.append('cv', file);
       
-      const parserResponse = await axios.post('http://localhost:5002/api/parser/upload', formData, {
+      const parserResponse = await axios.post('http://localhost:5003/api/parser/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
       const candidateProfile = parserResponse.data.profile;
 
       // Passo 2: Invia il profilo estratto al Job Service per il matching
-      const matchResponse = await axios.post(`http://localhost:5001/api/jobs/${selectedJob.id}/match`, {
+      const matchResponse = await axios.post(`http://localhost:5003/api/jobs/${selectedJob.id}/match`, {
         candidateProfile
       });
 

@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    image: node:26-alpine
+    working_dir: /app
+    volumes:
+      - ./services/api-gateway:/app
+    ports:
+      - "5003:5003"
+    command: npm run dev
+    environment:
+      - JOB_SERVICE_URL=http://job-service:5001
+      - PARSER_SERVICE_URL=http://parser-service:5002
+    depends_on:
+      - job-service
+      - parser-service
+
+  job-service:
+    image: node:26-alpine
+    working_dir: /app
+    volumes:
+      - ./services/job-service:/app
+    ports:
+      - "5001:5001"
+    command: npm run dev
+    environment:
+      - OLLAMA_URL=http://host.docker.internal:11434
+
+  parser-service:
+    image: node:26-alpine
+    working_dir: /app
+    volumes:
+      - ./services/ai-parser-service:/app
+    ports:
+      - "5002:5002"
+    command: npm run dev
+    environment:
+      - OLLAMA_URL=http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  frontend:
+    image: node:26-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "5174:5174"
+    command: npm run dev -- --host
+    depends_on:
+      - api-gateway
