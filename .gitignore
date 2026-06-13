@@ -1,0 +1,14 @@
+# Dipendenze di Node (per tutti i servizi e frontend)
+**/node_modules/
+**/dist/
+**/.env
+
+# File di sistema e log
+*.log
+.DS_Store
+.vscode/
+.idea/
+
+# File temporanei specifici dei nostri servizi
+services/ai-parser-service/uploads/*
+!services/ai-parser-service/uploads/.gitkeep
